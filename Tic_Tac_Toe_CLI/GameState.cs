@@ -21,7 +21,10 @@ namespace Tic_Tac_Toe_CLI
         public List<GameState> Children;
         public bool gameOver;
         public string CharacteristicString;
-        
+
+        public int nextBestMove;
+        public string nextBestMoveCharacteristicString;
+
 
         public GameState(Players firstPlayer, int[,] board, Players turn)
         {
@@ -47,6 +50,10 @@ namespace Tic_Tac_Toe_CLI
         {
             Tuple<Players, bool> winCheck = CheckForWinners();
             winner = winCheck.Item1;
+            if (winCheck.Item2)
+            {
+                gameOver = true;
+            }
             value = EvalFunction();
         }
 

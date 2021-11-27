@@ -6,7 +6,8 @@ namespace Tic_Tac_Toe_CLI
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            TicTacToeAutoPlayer autoPlayer = new TicTacToeAutoPlayer(false);
+            autoPlayer.Play();
         }
     }
 }

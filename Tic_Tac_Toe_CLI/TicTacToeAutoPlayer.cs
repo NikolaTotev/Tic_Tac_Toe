@@ -44,21 +44,21 @@ namespace Tic_Tac_Toe_CLI
             nextTurn.Y = int.Parse(Console.ReadLine());
         }
 
-        public void CalculateNextTurn()
-        {
-
-        }
-
+      
         public void Play()
         {
+            BuildChildren(currentState, Players.Computer, totalTurns);
             while (!currentState.gameOver)
             {
                 AskForNextTurn();
                 currentState.PlaceMove(nextTurn, Players.Player);
                 totalTurns++;
-                BuildChildren(currentState, Players.Computer, totalTurns);
-                currentState = Minimax(currentState, totalTurns, 0, 0, Turn.max);
+                PrintBoard();
+                Minimax(currentState, totalTurns, 0, 0, Turn.max);
+                var query = currentState.Children.Where(x => currentState.nextBestMoveCharacteristicString == x.CharacteristicString);
+                currentState = query as GameState;
                 totalTurns++;
+                PrintBoard();
             }
         }
 
@@ -110,8 +110,11 @@ namespace Tic_Tac_Toe_CLI
                             minState = result;
                         }
                     }
+
+                    state.CharacteristicString = minState.CharacteristicString;
+                    state.nextBestMove = minState.nextBestMove;
                     return minState;
-                    
+
                 case Turn.max:
                     int maxEval = int.MinValue;
                     GameState maxState = null;
@@ -124,8 +127,10 @@ namespace Tic_Tac_Toe_CLI
                             maxState = result;
                         }
                     }
+                    state.CharacteristicString = maxState.CharacteristicString;
+                    state.nextBestMove = maxState.nextBestMove;
                     return maxState;
-                    
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(turn), turn, null);
             }
@@ -139,7 +144,7 @@ namespace Tic_Tac_Toe_CLI
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    Console.Write($"{board[i,j]} ");
+                    Console.Write($"{board[i, j]} ");
                 }
                 Console.WriteLine();
             }
