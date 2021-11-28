@@ -18,12 +18,13 @@ namespace Tic_Tac_Toe_CLI
         public Players currentTurn;
         public int[,] Board = new int[,] { { -1, -1, -1 }, { -1, -1, -1 }, { -1, -1, -1 } };
         public List<Point> possibleMoves = new List<Point>();
-        public List<GameState> Children;
+        public List<GameState> Children = new List<GameState>();
         public bool gameOver;
         public string CharacteristicString;
 
         public int nextBestMove;
         public string nextBestMoveCharacteristicString;
+        public GameState nextBestState;
 
 
         public GameState(Players firstPlayer, int[,] board, Players turn)
@@ -175,12 +176,17 @@ namespace Tic_Tac_Toe_CLI
                     }
                 }
             }
+
+            if (possibleMoves.Count == 0)
+            {
+                gameOver = true;
+            }
         }
 
         public GameState CreateChildState(Point move, Players turn)
         {
             int[,] newBoard = new int[3, 3];
-            newBoard = Board;
+            Array.Copy(Board, newBoard, Board.Length);
             switch (turn)
             {
                 case Players.Player:

@@ -19,13 +19,14 @@ namespace Tic_Tac_Toe_CLI
         public bool winnerFound;
 
         //-1 = free field, 0 - player, 1 - computer
-        public int[,] board = new int[,] { { -1, -1, -1 }, { -1, -1, -1 }, { -1, -1, -1 } };
+        public static int[,] board = new int[,] { { -1, -1, -1 }, { -1, -1, -1 }, { -1, -1, -1 } };
         public Point nextTurn;
         public bool waitingForPlayerToChoose;
         public int totalTurns = 0;
         public Players firstPlayer;
         public Players winner = Players.NA;
-        public GameState currentState;
+        public GameState currentState = new GameState(Players.Player, board: board, Players.Player);
+        public bool childrenBuilt;
 
         public TicTacToeAutoPlayer(bool computerStartsFirst)
         {
@@ -44,19 +45,21 @@ namespace Tic_Tac_Toe_CLI
             nextTurn.Y = int.Parse(Console.ReadLine());
         }
 
-      
+
         public void Play()
         {
-            BuildChildren(currentState, Players.Computer, totalTurns);
             while (!currentState.gameOver)
             {
                 AskForNextTurn();
                 currentState.PlaceMove(nextTurn, Players.Player);
+                if (!childrenBuilt)
+                {
+                    BuildChildren(currentState, Players.Player, totalTurns);
+                }
                 totalTurns++;
                 PrintBoard();
-                Minimax(currentState, totalTurns, 0, 0, Turn.max);
-                var query = currentState.Children.Where(x => currentState.nextBestMoveCharacteristicString == x.CharacteristicString);
-                currentState = query as GameState;
+                Minimax(currentState, 0, 0, 0, Turn.max);
+                currentState = currentState.nextBestState;
                 totalTurns++;
                 PrintBoard();
             }
@@ -85,25 +88,30 @@ namespace Tic_Tac_Toe_CLI
                     BuildChildren(child, newTurn, numberOfTurns++);
                 }
             }
+
+            childrenBuilt = true;
         }
 
 
         public GameState Minimax(GameState state, int numberOfMoves, int alpha, int beta, Turn turn)
         {
-            GameState nextState = null;
-            if (numberOfMoves == 9)
+            state.EvaluateState();
+
+            if (state.Children.Count == 0 || state.gameOver)
             {
-                state.EvaluateState();
                 return state;
             }
+            GameState result;
             switch (turn)
             {
                 case Turn.min:
-                    int minEval = int.MinValue;
+                    int minEval = int.MaxValue;
                     GameState minState = null;
+
+                    //Console.WriteLine($"Rec depth {numberOfMoves}, Char str {state.CharacteristicString}, Child Num {state.Children.Count}");
                     foreach (GameState child in state.Children)
                     {
-                        GameState result = Minimax(child, numberOfMoves + 1, alpha, beta, Turn.max);
+                        result = Minimax(child, numberOfMoves + 1, alpha, beta, Turn.max);
                         if (result.value < minEval)
                         {
                             minEval = result.value;
@@ -111,23 +119,30 @@ namespace Tic_Tac_Toe_CLI
                         }
                     }
 
-                    state.CharacteristicString = minState.CharacteristicString;
+                    state.nextBestMoveCharacteristicString = minState.CharacteristicString;
+                    state.nextBestState = minState;
                     state.nextBestMove = minState.nextBestMove;
                     return minState;
 
                 case Turn.max:
                     int maxEval = int.MinValue;
                     GameState maxState = null;
+
+                    //Console.WriteLine($"Rec depth {numberOfMoves}, Char str {state.CharacteristicString}, Child Num {state.Children.Count}");
                     foreach (GameState child in state.Children)
                     {
-                        GameState result = Minimax(child, numberOfMoves + 1, alpha, beta, Turn.min);
+                        result = Minimax(child, numberOfMoves + 1, alpha, beta, Turn.min);
+                        //Console.WriteLine($"Rec depth: {numberOfMoves} Res Val {result.value}");
                         if (result.value > maxEval)
                         {
                             maxEval = result.value;
                             maxState = result;
                         }
+
+                        int a = 2;
                     }
-                    state.CharacteristicString = maxState.CharacteristicString;
+                    state.nextBestMoveCharacteristicString = maxState.CharacteristicString;
+                    state.nextBestState = maxState;
                     state.nextBestMove = maxState.nextBestMove;
                     return maxState;
 
