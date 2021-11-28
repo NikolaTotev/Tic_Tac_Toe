@@ -56,10 +56,14 @@ namespace Tic_Tac_Toe_CLI
                 {
                     BuildChildren(currentState, Players.Player, totalTurns);
                 }
-                totalTurns++;
                 PrintBoard();
-                Minimax(currentState, 0, 0, 0, Turn.max);
-                currentState = currentState.nextBestState;
+                totalTurns++;
+                Minimax(currentState, totalTurns, 0, 0, Turn.max);
+                var items = from child in currentState.Children
+                    orderby child.value ascending
+                    select child;
+
+                currentState = items.Last();
                 totalTurns++;
                 PrintBoard();
             }
@@ -159,10 +163,11 @@ namespace Tic_Tac_Toe_CLI
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    Console.Write($"{board[i, j]} ");
+                    Console.Write($"{currentState.Board[i, j]} ");
                 }
                 Console.WriteLine();
             }
+            Console.WriteLine();
         }
 
     }
