@@ -42,7 +42,7 @@ namespace Tic_Tac_Toe_CLI
             
         }
 
-        public void BuildChildren(GameState state, PlayerType turn, int numberOfTurns)
+        public void BuildChildren(GameState state, PlayerType playingPlayer, int numberOfTurns)
         {
            
         }
@@ -50,7 +50,10 @@ namespace Tic_Tac_Toe_CLI
 
         public GameState Minimax(GameState state, int numberOfMoves, int alpha, int beta, Turn minMaxSelector)
         {
-           
+            if (state.GameOver)
+            {
+                return state;
+            }
         }
 
 
