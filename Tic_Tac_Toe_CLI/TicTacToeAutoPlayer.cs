@@ -22,7 +22,7 @@ namespace Tic_Tac_Toe_CLI
         public GameState currentState;
         public bool gameOver;
         public PlayerType winner;
-
+        public bool gameTreeBuilt;
 
         public TicTacToeAutoPlayer(bool computerStartsFirst)
         {
@@ -39,16 +39,50 @@ namespace Tic_Tac_Toe_CLI
 
         public void Play()
         {
-            
+            while (!currentState.GameOver)
+            {
+                AskForNextTurn();
+                if (!gameTreeBuilt)
+                {
+                    BuildChildren(currentState, PlayerType.Player);
+                }
+
+                Minimax(currentState, 0, 0, Turn.min);
+
+                nextTurn = 
+            }
         }
 
-        public void BuildChildren(GameState state, PlayerType playingPlayer, int numberOfTurns)
+        public void BuildChildren(GameState state, PlayerType playingPlayer)
         {
-           
+            state.FindPossibleMoves();
+            foreach (Point move in state.possibleMoves)
+            {
+                GameState child;
+
+                PlayerType newTurn;
+                if (playingPlayer == PlayerType.Computer)
+                {
+                    newTurn = PlayerType.Player;
+                }
+                else
+                {
+                    newTurn = PlayerType.Computer;
+                }
+
+                child = state.CreateChildState(move, newTurn);
+
+                if (!child.GameOver)
+                {
+                    BuildChildren(child, newTurn);
+                }
+            }
+
+            gameTreeBuilt = true;
         }
 
 
-        public GameState Minimax(GameState state, int numberOfMoves, int alpha, int beta, Turn minMaxSelector)
+        public GameState Minimax(GameState state, int alpha, int beta, Turn minMaxSelector)
         {
             if (state.GameOver)
             {
