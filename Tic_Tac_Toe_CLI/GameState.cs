@@ -20,6 +20,7 @@ namespace Tic_Tac_Toe_CLI
         public PlayerType LastPlayer;
         public bool GameOver;
         public Point DifferenceFromParent;
+        public string CharacteristicString;
 
         public GameState(PlayerType lastPlayerToPlay, int[,] board, Point lastMove)
         {
