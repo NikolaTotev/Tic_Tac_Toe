@@ -34,6 +34,23 @@ namespace Tic_Tac_Toe_CLI
             Tuple<PlayerType, bool> checkResult = GameOverCheck();
             WinningPlayer = checkResult.Item1;
             GameOver = checkResult.Item2;
+
+            if (GameOver)
+            {
+                switch (WinningPlayer)
+                {
+                    case PlayerType.Player:
+                        value = 1;
+                        break;
+                    case PlayerType.Computer:
+                        value = -1;
+                        break;
+                    case PlayerType.Neither:
+                        value = 0;
+                        break;
+
+                }
+            }
         }
 
         public Tuple<PlayerType, bool> GameOverCheck()
@@ -153,7 +170,15 @@ namespace Tic_Tac_Toe_CLI
 
         public void PlaceMove(Point move, PlayerType player)
         {
-
+            switch (player)
+            {
+                case PlayerType.Player:
+                    Board[move.X, move.Y] = 0;
+                    break;
+                case PlayerType.Computer:
+                    Board[move.X, move.Y] = 1;
+                    break;
+            }
         }
     }
 }
