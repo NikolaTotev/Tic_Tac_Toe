@@ -28,6 +28,18 @@ namespace Tic_Tac_Toe_CLI
             LastPlayer = lastPlayerToPlay;
             DifferenceFromParent = new Point(lastMove.X, lastMove.Y);
             EvaluateState();
+
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    builder.Append(board[i, j].ToString());
+                }
+            }
+
+            CharacteristicString = builder.ToString();
+            int m = 14;
         }
 
         public void EvaluateState()
