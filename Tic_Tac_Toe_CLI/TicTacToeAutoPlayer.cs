@@ -39,19 +39,31 @@ namespace Tic_Tac_Toe_CLI
 
         public void Play()
         {
+            Turn nextMiniMaxSelection = Turn.min;
             while (!currentState.GameOver)
             {
                 AskForNextTurn();
                 currentState.PlaceMove(nextTurn, PlayerType.Player);
-
-                BuildChildren(currentState, PlayerType.Player);
                 currentState.EvaluateState();
+
+                BuildChildren(currentState, PlayerType.Player, 0);
                 PrintBoard();
                 Minimax(currentState, 0, 0, Turn.max, 0);
+
+                //switch (nextMiniMaxSelection)
+                //{
+                //    case Turn.min:
+                //        nextMiniMaxSelection = Turn.max;
+                //        break;
+                //    case Turn.max:
+                //        nextMiniMaxSelection = Turn.min;
+                //        break;
+                //}
 
                 var items = from child in currentState.Children
                             orderby child.value ascending
                             select child;
+
 
                 GameState nextBest = items.Last();
                 nextTurn = nextBest.DifferenceFromParent;
@@ -67,28 +79,29 @@ namespace Tic_Tac_Toe_CLI
             Console.WriteLine($"The Winner is {currentState.WinningPlayer}");
         }
 
-        public void BuildChildren(GameState state, PlayerType playingPlayer)
+        public void BuildChildren(GameState state, PlayerType playingPlayer, int recDepth)
         {
+            state.Children.Clear();
             state.FindPossibleMoves();
+            PlayerType newTurn;
+            if (playingPlayer == PlayerType.Computer)
+            {
+                newTurn = PlayerType.Player;
+            }
+            else
+            {
+                newTurn = PlayerType.Computer;
+            }
+
             foreach (Point move in state.possibleMoves)
             {
                 GameState child;
-
-                PlayerType newTurn;
-                if (playingPlayer == PlayerType.Computer)
-                {
-                    newTurn = PlayerType.Player;
-                }
-                else
-                {
-                    newTurn = PlayerType.Computer;
-                }
 
                 child = state.CreateChildState(move, newTurn);
 
                 if (!child.GameOver)
                 {
-                    BuildChildren(child, newTurn);
+                    BuildChildren(child, newTurn, recDepth+1);
                 }
             }
 

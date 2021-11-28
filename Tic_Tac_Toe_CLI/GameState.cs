@@ -40,10 +40,10 @@ namespace Tic_Tac_Toe_CLI
                 switch (WinningPlayer)
                 {
                     case PlayerType.Player:
-                        value = 1;
+                        value = -1;
                         break;
                     case PlayerType.Computer:
-                        value = -1;
+                        value = 1;
                         break;
                     case PlayerType.Neither:
                         value = 0;
@@ -136,6 +136,7 @@ namespace Tic_Tac_Toe_CLI
 
         public void FindPossibleMoves()
         {
+            possibleMoves.Clear();
             for (int i = 0; i < 3; i++)
             {
                 for (int j = 0; j < 3; j++)
