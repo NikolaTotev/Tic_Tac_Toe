@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Tic_Tac_Toe_CLI
 {
-    public enum Players
+    public enum PlayerType
     {
         Player,
         Computer,
@@ -19,7 +19,10 @@ namespace Tic_Tac_Toe_CLI
         //-1 = free field, 0 - player, 1 - computer
         public static int[,] board = new int[,] { { -1, -1, -1 }, { -1, -1, -1 }, { -1, -1, -1 } };
         public Point nextTurn;
-        
+        public GameState currentState;
+        public bool gameOver;
+        public PlayerType winner;
+
 
         public TicTacToeAutoPlayer(bool computerStartsFirst)
         {
@@ -28,7 +31,6 @@ namespace Tic_Tac_Toe_CLI
 
         public void AskForNextTurn()
         {
-            waitingForPlayerToChoose = true;
             Console.WriteLine("Your turn!");
             nextTurn.X = int.Parse(Console.ReadLine());
             nextTurn.Y = int.Parse(Console.ReadLine());
@@ -40,13 +42,13 @@ namespace Tic_Tac_Toe_CLI
             
         }
 
-        public void BuildChildren(GameState state, Players turn, int numberOfTurns)
+        public void BuildChildren(GameState state, PlayerType turn, int numberOfTurns)
         {
            
         }
 
 
-        public GameState Minimax(GameState state, int numberOfMoves, int alpha, int beta, Turn turn)
+        public GameState Minimax(GameState state, int numberOfMoves, int alpha, int beta, Turn minMaxSelector)
         {
            
         }
