@@ -47,7 +47,7 @@ namespace Tic_Tac_Toe_CLI
             Tuple<PlayerType, bool> checkResult = GameOverCheck();
             WinningPlayer = checkResult.Item1;
             GameOver = checkResult.Item2;
-
+            
             if (GameOver)
             {
                 switch (WinningPlayer)
@@ -64,6 +64,8 @@ namespace Tic_Tac_Toe_CLI
 
                 }
             }
+
+
         }
 
         public Tuple<PlayerType, bool> GameOverCheck()
@@ -89,7 +91,7 @@ namespace Tic_Tac_Toe_CLI
                 {
                     if (Board[0, i] != -1)
                     {
-                        return new Tuple<PlayerType, bool>(GetPlayerType(Board[i, 0]), true);
+                        return new Tuple<PlayerType, bool>(GetPlayerType(Board[0, i]), true);
                     }
                 }
             }
@@ -184,7 +186,7 @@ namespace Tic_Tac_Toe_CLI
 
         public void PlaceMove(Point move, PlayerType player)
         {
-            switch (player)
+             switch (player)
             {
                 case PlayerType.Player:
                     Board[move.X, move.Y] = 0;

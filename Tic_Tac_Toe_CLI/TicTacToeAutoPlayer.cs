@@ -39,7 +39,6 @@ namespace Tic_Tac_Toe_CLI
 
         public void Play()
         {
-            Turn nextMiniMaxSelection = Turn.min;
             while (!currentState.GameOver)
             {
                 AskForNextTurn();
@@ -49,17 +48,7 @@ namespace Tic_Tac_Toe_CLI
                 BuildChildren(currentState, PlayerType.Player, 0);
                 PrintBoard();
                 Minimax(currentState, 0, 0, Turn.max, 0);
-
-                //switch (nextMiniMaxSelection)
-                //{
-                //    case Turn.min:
-                //        nextMiniMaxSelection = Turn.max;
-                //        break;
-                //    case Turn.max:
-                //        nextMiniMaxSelection = Turn.min;
-                //        break;
-                //}
-
+                
                 var items = from child in currentState.Children
                             orderby child.value ascending
                             select child;
@@ -70,7 +59,6 @@ namespace Tic_Tac_Toe_CLI
                 currentState.PlaceMove(nextTurn, PlayerType.Computer);
                 PrintBoard();
                 currentState.EvaluateState();
-                int a = 14;
             }
 
             Console.WriteLine("=================");
