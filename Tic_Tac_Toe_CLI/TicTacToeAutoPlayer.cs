@@ -39,7 +39,6 @@ namespace Tic_Tac_Toe_CLI
 
         public void Play()
         {
-            Turn nextMiniMaxSelection = Turn.min;
             while (!currentState.GameOver)
             {
                 AskForNextTurn();
@@ -49,16 +48,6 @@ namespace Tic_Tac_Toe_CLI
                 BuildChildren(currentState, PlayerType.Player, 0);
                 PrintBoard();
                 Minimax(currentState, 0, 0, Turn.max, 0);
-
-                //switch (nextMiniMaxSelection)
-                //{
-                //    case Turn.min:
-                //        nextMiniMaxSelection = Turn.max;
-                //        break;
-                //    case Turn.max:
-                //        nextMiniMaxSelection = Turn.min;
-                //        break;
-                //}
 
                 var items = from child in currentState.Children
                             orderby child.value ascending
@@ -81,30 +70,7 @@ namespace Tic_Tac_Toe_CLI
 
         public void BuildChildren(GameState state, PlayerType playingPlayer, int recDepth)
         {
-            state.Children.Clear();
-            state.FindPossibleMoves();
-            PlayerType newTurn;
-            if (playingPlayer == PlayerType.Computer)
-            {
-                newTurn = PlayerType.Player;
-            }
-            else
-            {
-                newTurn = PlayerType.Computer;
-            }
-
-            foreach (Point move in state.possibleMoves)
-            {
-                GameState child;
-
-                child = state.CreateChildState(move, newTurn);
-
-                if (!child.GameOver)
-                {
-                    BuildChildren(child, newTurn, recDepth+1);
-                }
-            }
-
+            state.BuildChildren(playingPlayer, 0);
             gameTreeBuilt = true;
         }
 

@@ -89,7 +89,7 @@ namespace Tic_Tac_Toe_CLI
                 {
                     if (Board[0, i] != -1)
                     {
-                        return new Tuple<PlayerType, bool>(GetPlayerType(Board[i, 0]), true);
+                        return new Tuple<PlayerType, bool>(GetPlayerType(Board[0, i]), true);
                     }
                 }
             }
@@ -115,14 +115,18 @@ namespace Tic_Tac_Toe_CLI
             bool boardFull = true;
             for (int i = 0; i < 3; i++)
             {
-                for (int j = 0; j < 3; j++)
+                if (boardFull)
                 {
-                    if (Board[i, j] == -1)
+                    for (int j = 0; j < 3; j++)
                     {
-                        boardFull = false;
-                        break;
+                        if (Board[i, j] == -1)
+                        {
+                            boardFull = false;
+                            break;
+                        }
                     }
                 }
+                
             }
 
             if (boardFull)
@@ -158,6 +162,33 @@ namespace Tic_Tac_Toe_CLI
                     {
                         possibleMoves.Add(new Point(i, j));
                     }
+                }
+            }
+        }
+
+        public void BuildChildren(PlayerType playingPlayer, int recDepth)
+        {
+            Children.Clear();
+            FindPossibleMoves();
+            PlayerType newTurn;
+            if (playingPlayer == PlayerType.Computer)
+            {
+                newTurn = PlayerType.Player;
+            }
+            else
+            {
+                newTurn = PlayerType.Computer;
+            }
+
+            foreach (Point move in possibleMoves)
+            {
+                GameState child;
+
+                child = CreateChildState(move, newTurn);
+
+                if (!child.GameOver)
+                {
+                    child.BuildChildren(newTurn, recDepth + 1);
                 }
             }
         }
