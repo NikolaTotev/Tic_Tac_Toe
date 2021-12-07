@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -47,7 +48,7 @@ namespace Tic_Tac_Toe_CLI
 
                 BuildChildren(currentState, PlayerType.Player, 0);
                 PrintBoard();
-                Minimax(currentState, 0, 0, Turn.max, 0);
+                Minimax(currentState, int.MinValue, int.MaxValue, Turn.max, 0);
 
                 var items = from child in currentState.Children
                             orderby child.value ascending
@@ -89,11 +90,22 @@ namespace Tic_Tac_Toe_CLI
                     foreach (GameState child in state.Children)
                     {
 
-                        int result = Minimax(child, 0, 0, Turn.max, recLevel++);
+                        int result = Minimax(child, alpha, beta, Turn.max, recLevel++);
 
                         if (result < minEval)
                         {
                             minEval = result;
+                        }
+
+                        int newBeta = result;
+                        if (beta > result)
+                        {
+                            newBeta = beta;
+                        }
+
+                        if (newBeta <= alpha)
+                        {
+                            break;
                         }
                     }
 
@@ -106,11 +118,22 @@ namespace Tic_Tac_Toe_CLI
                     foreach (GameState child in state.Children)
                     {
 
-                        int result = Minimax(child, 0, 0, Turn.min, recLevel++);
+                        int result = Minimax(child, alpha, beta, Turn.min, recLevel++);
 
                         if (result > maxEval)
                         {
                             maxEval = result;
+                        }
+
+                        int newAlpha = result;
+                        if (alpha > result)
+                        {
+                            newAlpha = alpha;
+                        }
+
+                        if (beta <= newAlpha)
+                        {
+                            break;
                         }
                     }
 
